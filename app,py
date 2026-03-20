@@ -1,0 +1,58 @@
+import streamlit as st
+import pandas as pd
+import sqlite3
+import plotly.express as px
+
+# 1. PAGE CONFIG
+st.set_page_config(page_title="BankFlow | Executive Insights", layout="wide")
+
+def get_data():
+    conn = sqlite3.connect("bank_data.db")
+    df = pd.read_sql_query("SELECT * FROM loan_applications", conn)
+    conn.close()
+    return df
+
+# 2. APP HEADER
+st.title("🏦 BankFlow: Strategic Loan Analytics")
+st.markdown("Automated insights from the central Data Warehouse.")
+
+# 3. LOAD DATA
+try:
+    df = get_data()
+    
+    # 4. TOP LEVEL METRICS (The "At-a-Glance" View)
+    total_loans = len(df)
+    total_value = df['loan_amount'].sum()
+    avg_loan = df['loan_amount'].mean()
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Applications", total_loans)
+    col2.metric("Total Portfolio Value", f"N$ {total_value:,.2f}")
+    col3.metric("Avg. Loan Value", f"N$ {avg_loan:,.2f}")
+
+    # 5. VISUALIZATIONS
+    st.divider()
+    left_chart, right_chart = st.columns(2)
+
+    with left_chart:
+        st.subheader("Distribution by Branch")
+        # Bank-friendly Bar Chart
+        fig_branch = px.bar(df.groupby('branch').count().reset_index(), 
+                            x='branch', y='applicant_name', 
+                            labels={'applicant_name':'Volume'},
+                            color_discrete_sequence=['#003366']) # Professional Bank Blue
+        st.plotly_chart(fig_branch, use_container_width=True)
+
+    with right_chart:
+        st.subheader("Loan Status Breakdown")
+        # High-level Pie Chart
+        fig_status = px.pie(df, names='status', hole=0.4,
+                            color_discrete_sequence=px.colors.sequential.RdBu)
+        st.plotly_chart(fig_status, use_container_width=True)
+
+    # 6. THE DATA TABLE (The "Drill-Down" capability)
+    st.subheader("Raw Application Data")
+    st.dataframe(df, use_container_width=True)
+
+except Exception as e:
+    st.error("No data found. Please run the ETL script first to populate the database!")

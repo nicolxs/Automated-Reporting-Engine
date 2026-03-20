@@ -1,0 +1,17 @@
+# --- Core ETL & Data Processing ---
+pandas>=2.0.0
+openpyxl>=3.1.0        # Engine for reading .xlsx files
+SQLAlchemy>=2.0.0      # Database abstraction layer
+python-dotenv>=1.0.0   # Environment variable management
+
+# --- Automation ---
+watchdog>=3.0.0        # Folder monitoring
+
+# --- Visualization ---
+streamlit>=1.30.0
+plotly>=5.18.0
+
+# --- CI/CD & Testing ---
+pytest>=7.4.0          # Unit and integration testing
+pytest-cov>=4.1.0      # Coverage reports for pipelines
+flake8>=6.1.0          # Linting to ensure code quality
