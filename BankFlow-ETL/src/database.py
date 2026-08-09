@@ -1,21 +1,25 @@
 import sqlite3
-from sqlalchemy import create_all, Table, Column, Integer, String, Float, MetaData
 
-DB_URL = "sqlite:///bank_data.db"
+DB_PATH = "bank_data.db"
 
 def init_db():
-    # Define a schema matching bank loan application data
-    conn = sqlite3.connect("bank_data.db")
+    """Initialize the database with the loan_applications table."""
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS loan_records (
+        CREATE TABLE IF NOT EXISTS loan_applications (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             applicant_name TEXT NOT NULL,
             loan_amount REAL NOT NULL,
             loan_type TEXT,
             branch TEXT,
+            status TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     conn.commit()
     conn.close()
+    print("Database initialized successfully.")
+
+if __name__ == "__main__":
+    init_db()
