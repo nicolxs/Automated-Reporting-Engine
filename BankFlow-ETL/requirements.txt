@@ -1,0 +1,15 @@
+# Core ETL & Data Processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+sqlalchemy>=2.0.0
+
+# File Watching
+watchdog>=3.0.0
+
+# Visualization & Dashboard
+streamlit>=1.28.0
+plotly>=5.17.0
+
+# Testing & Linting
+pytest>=7.4.0
+flake8>=6.1.0
